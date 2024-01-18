@@ -6,7 +6,7 @@ function_name="agero-case-lambda"
 
 /bin/bash ./build-script/builder.sh
 
-zip -r lambda.zip lambda_pkg/*
+(cd lambda_pkg && zip -r ../lambda.zip ./*)
 
 aws lambda update-function-code --function-name $function_name --zip-file fileb://lambda.zip
 
