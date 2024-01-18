@@ -9,22 +9,20 @@ Develop a AWS Lambda function that is triggered by new CSV files uploaded to an 
 
 1.  Setup AWS Resources (using Terraform)
     
-    a.  Create 2 S3 buckets: one for CSV uploads (source bucket) and one for filtered
-        CSV data (destination bucket).
-    b.  Set up an AWS Lambda function 
-    c.  Ensure it has IAM roles to read from the source bucket and write to the
-        destination bucket.        
-    d.  Setup IAM roles and S3 buckets
+    1.  Create 2 S3 buckets: one for CSV uploads (source bucket) and one for filtered CSV data (destination bucket).
+    2. Set up an AWS Lambda function 
+    3. Ensure it has IAM roles to read from the source bucket and write to the destination bucket.
+    4. Setup IAM roles and S3 buckets
         
 2.  Configure S3 Trigger (using Terraform)
-	a. Configure the source bucket to trigger the Lambda function on the 'ObjectCreated' event for new CSV files.
+	1. Configure the source bucket to trigger the Lambda function on the 'ObjectCreated' event for new CSV files.
 
 3. Lambda Function Logic
-	a.  Read the CSV file that triggered the event from the source bucket.
-    b.  Extract the file key and bucket name from the event data.
-    c.  Parse the CSV file
-    d.  Select rows where numerical values that exceed 4.7
-    e.  Save the selected rows as a new CSV file to the destination bucket.
+	1.  Read the CSV file that triggered the event from the source bucket.
+	2. Extract the file key and bucket name from the event data.
+	3. Parse the CSV file
+	4. Select rows where numerical values that exceed 4.7
+	5. Save the selected rows as a new CSV file to the destination bucket.
 
 ## Repository Structure
 
