@@ -76,7 +76,7 @@ Main code filters bucket and key from the event and calls previously mentioned m
 
 ### builder
 
-Script used by the terraform Lambda module to automate the deployment package creation. It uses virtualenv to install the requisites mentioned in reqs.txt, moves all dependencies and code to a unique directory to be used by terraform data archive_file.
+Script used by the terraform Lambda module and update-code script to automate the deployment package creation. It uses virtualenv to install the requisites mentioned in reqs.txt, moves all dependencies and code to a unique directory to be used by terraform data archive_file.
 
 ### update-code
 
