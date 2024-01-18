@@ -2,7 +2,7 @@
 
 cd $path_cwd
 
-if [ -f "lambda.zip"]; then
+if [ -f "lambda.zip" ]; then
     rm -Rf lambda.zip
 fi
 
@@ -15,8 +15,7 @@ deactivate
 
 dir_name=lambda_pkg/
 
-if [ -d "lambda_pkg"]
-then
+if [ -d "lambda_pkg" ]; then
     rm -Rf ./lambda_pkg/*
 else
 
