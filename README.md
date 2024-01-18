@@ -62,7 +62,7 @@ Sets the configuration for the logger using pythonjsonlogger to create a single 
 
 ### process_csv
 
-Processes the CSV object according to the threshold filter set on the lambda environment variable. 
+Processes the CSV object according to the threshold filter set on the lambda environment variable. This code will only consider numeric values in the first column from the CSV.
 
 ### s3_bucket
 
