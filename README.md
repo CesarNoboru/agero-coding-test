@@ -58,7 +58,7 @@ The code was split by context to make it easier to read
 
 ### json_logger
 
-Sets the configuration for the logger using pythonjsonlogger to create a single line JSON object as log to make easier to read and integrate with any log aggregator.
+Sets the configuration for the logger using pythonjsonlogger to create a single line JSON object as log to make easier to read and integrate with any log aggregator. Its level is set by an environment variable `log_level`, if not set it will consider `DEBUG` by default
 
 ### process_csv
 
