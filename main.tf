@@ -5,12 +5,7 @@ terraform {
             version = "~> 5.0"
         }
     }
-    backend "s3" {
-        bucket         = "agero-terraform-backend-bucket"
-        key            = "terraform.tfstate"
-        region         = "us-east-1"
-        dynamodb_table = "agero-terraform-backend-table"
-    }
+    backend "s3" {}
 }
 
 provider "aws" {
