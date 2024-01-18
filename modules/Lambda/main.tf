@@ -62,12 +62,6 @@ EOF
 }
 
 # LAMBDA BUILDER
-resource "random_string" "name" {
-    length  = 6
-    special = false
-    upper   = false
-}
-
 resource "terraform_data" "install_python_dependencies" {
     provisioner "local-exec" {
         command = "bash build-script/builder.sh"
@@ -78,7 +72,6 @@ resource "terraform_data" "install_python_dependencies" {
             path_module      = path.module
             runtime          = "python3.8"
             function_name    = var.lambda_name
-            random_string    = random_string.name.result
         }
     }
 }
@@ -86,7 +79,6 @@ resource "terraform_data" "install_python_dependencies" {
 data "archive_file" "lambda_zip" {
     depends_on      = [terraform_data.install_python_dependencies]
     type            = "zip"
-    #source_dir      = "${path.cwd}/lambda_pkg_${random_string.name.result}/"
     source_dir      = "${path.cwd}/lambda_pkg/"
     output_path     = var.output_path
     
