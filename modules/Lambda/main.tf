@@ -69,7 +69,6 @@ resource "terraform_data" "install_python_dependencies" {
         environment = {
             source_code_path = var.source_code_path
             path_cwd         = path.cwd
-            path_module      = path.module
             runtime          = "python3.8"
             function_name    = var.lambda_name
         }
