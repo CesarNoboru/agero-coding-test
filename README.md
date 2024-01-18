@@ -26,8 +26,6 @@ Develop a AWS Lambda function that is triggered by new CSV files uploaded to an 
     d.  Select rows where numerical values that exceed 4.7
     e.  Save the selected rows as a new CSV file to the destination bucket.
 
-StackEdit stores your files in your browser, which means all your files are automatically saved locally and are accessible **offline!**
-
 ## Repository Structure
 
 ```bash
