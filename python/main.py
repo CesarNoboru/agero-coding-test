@@ -1,6 +1,6 @@
 from json_logger import logger
-from s3_bucket import s3_get, s3_send
-from process_csv import process
+from s3_bucket import S3Client
+from process_csv import CSVProcess
 
 
 def lambda_handler (event, context):
@@ -11,9 +11,9 @@ def lambda_handler (event, context):
     except Exception as e:
         logger.error(f"Error reading event: {e}")
         raise Exception(f"Error reading event: {e}")
-    
-    csv = s3_get(bucket, key)
-    result = process(csv)
-    s3_send(key, result)
+    s3 = S3Client("us-east-1")
+    csv = s3.get(bucket, key)
+    result = CSVProcess.process(csv)
+    s3.send(key, result)
 
     return 200
