@@ -102,9 +102,6 @@ resource "aws_lambda_function" "lambda_function" {
                 destination_bucket = var.destination_s3_id
             }
     }
-    provisioner "local-exec" {
-        command = "rm -Rf ${path.cwd}/lambda.zip"
-    }
 }
 
 # LOG GROUP
