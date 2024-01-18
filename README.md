@@ -92,3 +92,20 @@ Script created to update only the code itself, it invokes builder script, zips a
 - virtualenv
 - AWS credentials
 - Terraform backend S3 and DynamoDB
+
+## Usage
+
+#### Deployment
+
+(Optional) Edit terraform backend (backend.conf) to suit your AWS account environment
+```bash
+terraform init -backend-config=backend.conf
+terraform plan
+terraform deploy
+```
+
+#### Update Lambda Code
+
+```bash
+./build-script/update-code.sh
+```
