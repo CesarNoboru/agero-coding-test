@@ -78,7 +78,7 @@ Simply gets the object from the source bucket, and sends the filtered object to 
 
 ### main
 
-Main code filters bucket and key from the event and calls previously mentioned modules.
+Main code filters bucket and key from the event, stores Amazon Request ID from `context` to an environment variable to be used by `json_logger` and calls previously mentioned modules.
 
 ## Scripts
 
