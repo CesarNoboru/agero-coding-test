@@ -33,8 +33,8 @@ Develop a AWS Lambda function that is triggered by new CSV files uploaded to an 
 │  ├── Lambda (Lambda packaging and deployment)
 │  ├── S3 (Both S3 Buckets)
 │  ├── Trigger (Trigger from SOURCE S3 to Lambda)
-├──  python(Python code)
-│  ├── test(Unit testing with pytest)
+├──  python (Python code)
+│  ├── test (Unit testing with pytest)
 └── (Main terraform code using modules)
 
 ```
