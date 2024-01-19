@@ -11,6 +11,7 @@ random_nums
 0.1
 1
 """
+
 VALID_CSV_RETURN="""
 random_nums
 10.0
@@ -32,9 +33,27 @@ bsd
 4.6
 4.7
 """
+
 DIRTY_CSV_RETURN="""
 header
 10
 09.1
 10.1
 """
+
+VALID_EVENT = {
+    "Records": [
+        {
+            "s3": {
+                "bucket": {
+                    "name": "src-bucket"
+                },
+                "object": {
+                    "key" : "TEST_KEY"
+                }
+            }
+        }
+    ]
+}
+
+INVALID_EVENT = {}
