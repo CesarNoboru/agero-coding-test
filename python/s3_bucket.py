@@ -13,7 +13,7 @@ class S3Client:
             csv = self.client.get_object(Bucket=bucket, Key=key)
         except Exception as e:
             logger.error(f"Error getting Object from SOURCE S3: {e}")
-            raise Exception(f"Error getting Objecti from SOURCE S3: {e}")
+            raise Exception(f"Error getting Object from SOURCE S3: {e}")
         
         logger.info(f"Downloaded object {key} from source bucket {bucket}")
 
