@@ -3,12 +3,10 @@ sys.path.append("..")
 import pytest
 from tempfile import NamedTemporaryFile
 from s3_bucket import S3Client
-from moto import mock_s3
-import os
-import boto3
 import values
 import pandas as pd
 from io import StringIO
+import os
 
 
 
