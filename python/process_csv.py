@@ -8,6 +8,9 @@ class CSVProcess:
         try:
             dataframe = pd.read_csv(csv, header=0)
             logger.debug(dataframe.to_string(index=False))
+        except pd.errors.EmptyDataError as e:
+            logger.error(f"Empty CSV: {e}")
+            raise Exception(f"Empty CSV: {e}")
         except Exception as e:
             logger.error(f"Error reading CSV: {e}")
             raise Exception(f"Error reading CSV: {e}")
