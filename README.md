@@ -28,20 +28,20 @@ Develop a AWS Lambda function that is triggered by new CSV files uploaded to an 
 
 ```bash
 
-├──  build-script (Scripts used  to  build  and  update  lambda  deployment  packages)
+├──  build-script (Scripts used to build and update lambda deployment packages)
 ├──  modules (Terraform modules)
 │  ├── Lambda (Lambda packaging and deployment)
 │  ├── S3 (Both S3 Buckets)
 │  ├── Trigger (Trigger from SOURCE S3 to Lambda)
 ├──  python(Python code)
 │  ├── test(Unit testing with pytest)
-└── (Main terraform  code  using  modules)
+└── (Main terraform code using modules)
 
 ```
 
 ## Terraform
 
-This portion of the code was split according to the services and order of creation. It uses S3 and dynamoDB (previously created) as backend.
+This portion of the code was split according to the services and order of creation. It uses S3 and DynamoDB (previously created) as backend.
 
 ### Lambda
 
@@ -53,7 +53,7 @@ Creates both S3 Buckets, source and destination.
 
 ### Trigger
 
-Creates the trigger on S3 ObjectCreated event invoking the lambda function.
+Creates the trigger on S3 `ObjectCreated` event invoking the lambda function.
 
 ## Python
 
@@ -61,7 +61,7 @@ The code was split by context to make it easier to read and maintain.
 
 ### json_logger
 
-Sets the configuration for the logger using pythonjsonlogger to create a single line JSON object as log to make easier to read and integrate with any log aggregator. Its level is set by an environment variable `log_level`, if not set it will consider `DEBUG` by default. It uses a environment variable stored by `main.lambda_handler`  to provide Amazon Request ID from Lambda `context`.
+Sets the configuration for the logger using `python-json-logger` to create a single line JSON log to make easier to read and integrate with any aggregator. Its level is set by an environment variable `log_level`, if not set it will consider `DEBUG` by default. It uses the environment variable `request_id` stored by `main.lambda_handler` to provide Amazon Request ID from Lambda `context`.
 
 Log example:
 ```bash
@@ -70,15 +70,15 @@ Log example:
 
 ### process_csv
 
-Processes the CSV object according to the threshold filter set on the lambda environment variable. This code will only consider numeric values in the first column from the CSV.
+Processes the CSV using `pandas` according to the threshold filter set on the lambda environment variable `filter_threshold`. This code will only consider numeric values in the first column from the CSV.
 
 ### s3_bucket
 
-Simply gets the object from the source bucket, and sends the filtered object to the destination bucket.
+Simply gets the object from the source bucket, and sends the filtered object to the destination bucket set on lambda environment variable `destination_bucket`.
 
 ### main
 
-Main code filters bucket and key from the event, stores Amazon Request ID from `context` to an environment variable to be used by `json_logger` and calls previously mentioned modules.
+Main code filters bucket and key from the `event`, stores Amazon Request ID from `context` to the environment variable `request_id` to be used by `json_logger` and calls previously mentioned modules.
 
 ## Scripts
 
@@ -88,7 +88,7 @@ Script used by the terraform Lambda module and update-code script to automate th
 
 ### update-code
 
-Script created to update only the code itself, it invokes builder script, zips and send the deployment package to the lambda function.
+Script created to update only the deployment package, it invokes builder script, zips and send the deployment package to the lambda function.
 
 ## Requisites
 
@@ -117,7 +117,7 @@ pytest
 
 #### Deployment
 
-(Optional) Edit terraform backend (backend.conf) to suit your AWS account environment
+(Optional) Edit terraform backend (backend.conf) to suit your AWS account environment.
 
 ```bash
 
