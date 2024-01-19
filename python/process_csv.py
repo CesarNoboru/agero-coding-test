@@ -21,9 +21,9 @@ class CSVProcess:
         
         try:
             column_name = dataframe.columns[0]
-
             logger.debug(f"Column name: {column_name}")
-            result = dataframe[pd.to_numeric(dataframe[column_name], errors='coerce') > threshold]
+            dataframe[column_name] = pd.to_numeric(dataframe[column_name], errors='coerce')
+            result = dataframe[dataframe[column_name] > threshold]
             logger.debug(result.to_string(index=False))
         except Exception as e:
             logger.error(f"Error filtering CSV with threshold: {e}")
