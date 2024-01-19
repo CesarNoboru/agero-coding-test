@@ -7,6 +7,9 @@ def get_info(event):
         bucket = event['Records'][0]['s3']['bucket']['name']
         key = event['Records'][0]['s3']['object']['key']
         logger.debug(f"Bucket {bucket}, Key {key}")
+    except KeyError as e:
+      logger.error(f"Missing key in event: {e}")
+      raise Exception(f"Missing key in event: {e}")
     except Exception as e:
         logger.error(f"Error reading event: {e}")
         raise Exception(f"Error reading event: {e}")
