@@ -1,8 +1,9 @@
 from json_logger import logger
 from s3_bucket import S3Client
 from process_csv import CSVProcess
+import os
+
 def get_info(event):
-    logger.debug(event)
     try:
         bucket = event['Records'][0]['s3']['bucket']['name']
         key = event['Records'][0]['s3']['object']['key']
@@ -17,7 +18,9 @@ def get_info(event):
     return bucket, key
 
 def lambda_handler (event, context):
+    os.environ["request_id"] = context.aws_request_id
     logger.info("Starting Lambda")
+    logger.debug("Received event.", extra=event)
     bucket, key = get_info(event)
     s3 = S3Client("us-east-1")
     csv = s3.get(bucket, key)
