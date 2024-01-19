@@ -10,4 +10,4 @@ function_name="agero-case-lambda"
 
 aws lambda update-function-code --function-name $function_name --zip-file fileb://lambda.zip
 
-rm -Rf lambda.zip lambda_pkg
+rm -Rf lambda.zip lambda_pkg/*
