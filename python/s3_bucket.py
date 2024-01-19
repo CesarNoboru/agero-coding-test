@@ -42,4 +42,4 @@ class S3Client:
             raise Exception(f"Error sending Object to DESTINATION S3: {e}")
         
         logger.info(f"Sent object {key} to bucket {bucket}")
-        return
+        return True
