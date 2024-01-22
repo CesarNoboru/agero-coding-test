@@ -27,3 +27,13 @@ variable "memory_size" {
     description = "Lambda memory."
     default     = "128"
 }
+
+variable "lambda_runtime" {
+    description = "Lambda runtime"
+    default     = "python3.8" 
+}
+
+variable "s3_events" {
+    description = "List of S3 events to trigger Lambda function."
+    default     = ["s3:ObjectCreated:*"]
+}

@@ -1,0 +1,29 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+    {
+        "Sid":"AllowReadSource",
+        "Action": [
+            "s3:GetObject",
+            "s3:ListBucket",
+            "s3:GetObjectVersion"
+        ],
+        "Effect": "Allow",
+        "Resource": [
+            "${SOURCE_ARN}",
+            "${SOURCE_ARN}/*"
+        ]
+    },
+    {
+        "Sid":"AllowWriteDestination",
+        "Action": [
+            "s3:PutObject"
+        ],
+        "Effect": "Allow",
+        "Resource": [
+            "${DESTINATION_ARN}",
+            "${DESTINATION_ARN}/*"
+        ]
+    }
+    ]
+}
