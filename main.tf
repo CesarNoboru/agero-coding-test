@@ -43,6 +43,7 @@ module "s3_lambda_trigger" {
     lambda_environment_variables = {
         filter_threshold = var.filter_threshold
         destination_bucket = one([ for id in module.s3.bucket_ids : id if can(regex("destination", id)) ])
+        log_level = "debug"
     }
     attach_custom_policy = true
     policy = "${data.template_file.policy.rendered}"
