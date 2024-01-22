@@ -51,35 +51,36 @@ Creates Lambda function with basic IAM permissions, triggeded by S3 event, Cloud
 Can also attach a custom policy to Lambda's IAM Role.
 
 #### Variables
-`lambda_name` Lambda function's name.
-`memory_size` Amount of memory in MB for the Lambda function.
-`timeout` Lambda function timeout in seconds.
-`runtime` Lambdas runtime version.
-`source_code_path` Path for the Lambda's source code directory.
-`output_path` Path where the Lambda's deployment package will be created locally.
-`lambda_environment_variables` Enviroment variables map for Lambda function.
-`source_s3_arn` S3 Bucket ARN that will trigger the Lambda function.
-`source_s3_id` S3 Bucket ID (Name) that will trigger the Lambda function.
-`s3_events` S3 Events that will trigger the Lambda function.
-`attach_custom_policy` Boolean that indicates if a custom policy will be attached to the Lambda's IAM Role.
-`policy` Custom IAM Policy to be attached to Lambda's IAM Role.
+
+- `lambda_name` Lambda function's name.
+- `memory_size` Amount of memory in MB for the Lambda function.
+- `timeout` Lambda function timeout in seconds.
+- `runtime` Lambdas runtime version.
+- `source_code_path` Path for the Lambda's source code directory.
+- `output_path` Path where the Lambda's deployment package will be created locally.
+- `lambda_environment_variables` Enviroment variables map for Lambda function.
+- `source_s3_arn` S3 Bucket ARN that will trigger the Lambda function.
+- `source_s3_id` S3 Bucket ID (Name) that will trigger the Lambda function.
+- `s3_events` S3 Events that will trigger the Lambda function.
+- `attach_custom_policy` Boolean that indicates if a custom policy will be attached to the Lambda's IAM Role.
+- `policy` Custom IAM Policy to be attached to Lambda's IAM Role.
 
 #### Outputs
 
-`lambda_arn` Lambda function's ARN.
-`lambda_role_id` Lambda's IAM Role ID.
+- `lambda_arn` Lambda function's ARN.
+- `lambda_role_id` Lambda's IAM Role ID.
 
 ### S3
 
 This module can create as much private S3 Buckets as needed.
 
 #### Variables
-`prefix_bucket_name` Prefix string used on all S3 Bucket names to be created.
-`suffix_bucket_name` List with suffixes for S3 Bucket names. This list will determine how many buckets will be created.
+- `prefix_bucket_name` Prefix string used on all S3 Bucket names to be created.
+- `suffix_bucket_name` List with suffixes for S3 Bucket names. This list will determine how many buckets will be created.
 
 #### Outputs
-`bucket_ids` List of S3 Bucket IDs (Names)
-`bucket_arns` List of S3 Bucket ARNs
+- `bucket_ids` List of S3 Bucket IDs (Names)
+- `bucket_arns` List of S3 Bucket ARNs
 
 ### Main Terraform Code
 
