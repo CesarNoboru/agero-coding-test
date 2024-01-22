@@ -20,45 +20,18 @@ EOF
 
 # BASE PERMISSIONS
 resource "aws_iam_role_policy_attachment" "base" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  role       = aws_iam_role.lambda_iam_role.name
+    depends_on = [aws_iam_role.lambda_iam_role]
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+    role       = aws_iam_role.lambda_iam_role.name
 }
 
+#OPTIONAL POLICY ATTACHMENT
 resource "aws_iam_role_policy" "lambda_iam_policy" {
+    depends_on = [aws_iam_role.lambda_iam_role]
+    count = var.attach_custom_policy ? 1 : 0
     name = join("-", [var.lambda_name, "policy"])
     role = aws_iam_role.lambda_iam_role.id
-
-    policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-    {
-        "Sid":"AllowReadSource",
-        "Action": [
-            "s3:GetObject",
-            "s3:ListBucket",
-            "s3:GetObjectVersion"
-        ],
-        "Effect": "Allow",
-        "Resource": [
-            "${var.source_s3_arn}",
-            "${var.source_s3_arn}/*"
-        ]
-    },
-    {
-        "Sid":"AllowWriteDestination",
-        "Action": [
-            "s3:PutObject"
-        ],
-        "Effect": "Allow",
-        "Resource": [
-            "${var.destination_s3_arn}",
-            "${var.destination_s3_arn}/*"
-        ]
-    }
-    ]
-}
-EOF
+    policy = var.policy
 }
 
 # LAMBDA BUILDER
@@ -69,7 +42,7 @@ resource "terraform_data" "install_python_dependencies" {
         environment = {
             source_code_path = var.source_code_path
             path_cwd         = path.cwd
-            runtime          = "python3.8"
+            runtime          = var.runtime
             function_name    = var.lambda_name
         }
     }
@@ -85,26 +58,43 @@ data "archive_file" "lambda_zip" {
 
 # LAMBDA FUNCTION
 resource "aws_lambda_function" "lambda_function" {
-    depends_on       = [data.archive_file.lambda_zip]
+    depends_on       = [data.archive_file.lambda_zip,aws_iam_role.lambda_iam_role]
     filename         = var.output_path
     source_code_hash = data.archive_file.lambda_zip.output_base64sha256
     role             = aws_iam_role.lambda_iam_role.arn
     function_name    = var.lambda_name
     handler          = "main.lambda_handler"
-    runtime          = "python3.8"
+    runtime          = var.runtime
     timeout          = var.timeout
     memory_size      = var.memory_size
 
     environment {
-        variables = {
-                filter_threshold = var.filter_threshold
-                destination_bucket = var.destination_s3_id
-            }
+        variables = var.lambda_environment_variables
     }
 }
 
 # LOG GROUP
 resource "aws_cloudwatch_log_group" "function_log_group" {
-  name              = "/aws/lambda/${aws_lambda_function.lambda_function.function_name}"
-  retention_in_days = 7
+    name              = "/aws/lambda/${aws_lambda_function.lambda_function.function_name}"
+    retention_in_days = 7
+}
+
+# LAMBDA PERMISSION
+resource "aws_lambda_permission" "lambda_permission" {
+    depends_on = [aws_lambda_function.lambda_function]
+    statement_id  = "AllowS3Invoke"
+    action        = "lambda:InvokeFunction"
+    function_name = var.lambda_name
+    principal     = "s3.amazonaws.com"
+    source_arn    = var.source_s3_arn
+}
+
+# LAMBDA TRIGGER 
+resource "aws_s3_bucket_notification" "lambda_trigger" {
+    depends_on = [aws_lambda_permission.lambda_permission, aws_lambda_function.lambda_function]
+    bucket = var.source_s3_id
+    lambda_function {
+        lambda_function_arn = aws_lambda_function.lambda_function.arn
+        events              = var.s3_events
+    }
 }
