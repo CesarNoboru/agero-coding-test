@@ -1,39 +1,21 @@
-# SOURCE S3
-resource "aws_s3_bucket" "source_bucket" {
-    bucket          = join("-", [var.prefix_bucket_name, "source"])
+resource "aws_s3_bucket" "s3_bucket" {
+    for_each        = toset(var.suffix_bucket_name)
+    bucket          = join("-", [var.prefix_bucket_name, each.value])
     force_destroy   = true
 }
 
-resource "aws_s3_bucket_ownership_controls" "source_bucket_control" {
-    bucket          = aws_s3_bucket.source_bucket.id
+resource "aws_s3_bucket_ownership_controls" "s3_bucket_control" {
+    depends_on              = [aws_s3_bucket.s3_bucket]
+    for_each                = aws_s3_bucket.s3_bucket
+    bucket                  = aws_s3_bucket.s3_bucket[each.key].id
     rule {
-        object_ownership = "BucketOwnerPreferred"
+        object_ownership    = "BucketOwnerPreferred"
     }
 }
 
-resource "aws_s3_bucket_acl" "source_bucket_acl" {
-  depends_on            = [aws_s3_bucket_ownership_controls.source_bucket_control]
-
-  bucket                = aws_s3_bucket.source_bucket.id
-  acl                   = "private"
-}
-
-# DESTINATION S3
-resource "aws_s3_bucket" "destination_bucket" {
-    bucket          = join("-", [var.prefix_bucket_name, "destination"])
-    force_destroy   = true
-}
-
-resource "aws_s3_bucket_ownership_controls" "destination_bucket_control" {
-    bucket = aws_s3_bucket.destination_bucket.id
-    rule {
-        object_ownership = "BucketOwnerPreferred"
-    }
-}
-
-resource "aws_s3_bucket_acl" "destination_bucket_acl" {
-  depends_on = [aws_s3_bucket_ownership_controls.destination_bucket_control]
-
-  bucket = aws_s3_bucket.destination_bucket.id
-  acl    = "private"
+resource "aws_s3_bucket_acl" "s3_bucket_acl" {
+    depends_on            = [aws_s3_bucket_ownership_controls.s3_bucket_control]
+    for_each              = aws_s3_bucket.s3_bucket
+    bucket                = aws_s3_bucket.s3_bucket[each.key].id
+    acl                   = "private"
 }
