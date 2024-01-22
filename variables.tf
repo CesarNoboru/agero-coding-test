@@ -18,7 +18,12 @@ variable "prefix_bucket_name" {
     default     = "agero-case-s3"
 }
 
+variable "suffix_bucket_name" {
+    description = "Suffix for S3 buckets"
+    default     = ["source", "destination"]
+}
+
 variable "memory_size" {
-    description = "Lambda RAM memory."
+    description = "Lambda memory."
     default     = "128"
 }
