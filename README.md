@@ -30,9 +30,8 @@ Develop a AWS Lambda function that is triggered by new CSV files uploaded to an 
 
 ├──  build-script (Scripts used to build and update lambda deployment packages)
 ├──  modules (Terraform modules)
-│  ├── Lambda (Lambda packaging and deployment)
-│  ├── S3 (Both S3 Buckets)
-│  ├── Trigger (Trigger from SOURCE S3 to Lambda)
+│  ├── S3-Lambda-Trigger (Lambda triggered by S3 event packaging and deployment)
+│  ├── S3 (Create S3 Buckets)
 ├──  python (Python code)
 │  ├── test (Unit testing with pytest)
 └── (Main terraform code using modules)
@@ -41,19 +40,52 @@ Develop a AWS Lambda function that is triggered by new CSV files uploaded to an 
 
 ## Terraform
 
-This portion of the code was split according to the services and order of creation. It uses S3 and DynamoDB (previously created) as backend.
+This portion of the code was split in two modules to be reused outside of this projects context.
+It uses S3 and DynamoDB (previously created) as backend.
 
-### Lambda
+### S3-Lambda Trigger
 
-Creates Lambda role, policies, log group, function and also automates the deployment package creation while deploying.
+This module creates a Lambda function triggered by an S3 event.
+
+Creates Lambda function with basic IAM permissions, triggeded by S3 event, CloudWatch log group, automates the deployment package creation while deploying.
+Can also attach a custom policy to Lambda's IAM Role.
+
+#### Variables
+`lambda_name` Lambda function's name.
+`memory_size` Amount of memory in MB for the Lambda function.
+`timeout` Lambda function timeout in seconds.
+`runtime` Lambdas runtime version.
+`source_code_path` Path for the Lambda's source code directory.
+`output_path` Path where the Lambda's deployment package will be created locally.
+`lambda_environment_variables` Enviroment variables map for Lambda function.
+`source_s3_arn` S3 Bucket ARN that will trigger the Lambda function.
+`source_s3_id` S3 Bucket ID (Name) that will trigger the Lambda function.
+`s3_events` S3 Events that will trigger the Lambda function.
+`attach_custom_policy` Boolean that indicates if a custom policy will be attached to the Lambda's IAM Role.
+`policy` Custom IAM Policy to be attached to Lambda's IAM Role.
+
+#### Outputs
+
+`lambda_arn` Lambda function's ARN.
+`lambda_role_id` Lambda's IAM Role ID.
 
 ### S3
 
-Creates both S3 Buckets, source and destination.
+This module can create as much private S3 Buckets as needed.
 
-### Trigger
+#### Variables
+`prefix_bucket_name` Prefix string used on all S3 Bucket names to be created.
+`suffix_bucket_name` List with suffixes for S3 Bucket names. This list will determine how many buckets will be created.
 
-Creates the trigger on S3 `ObjectCreated` event invoking the lambda function.
+#### Outputs
+`bucket_ids` List of S3 Bucket IDs (Names)
+`bucket_arns` List of S3 Bucket ARNs
+
+### Main Terraform Code
+
+The main Terraform code uses `S3` module to create both S3 Buckets (source and destination).
+Creates a policy document that allows the Lambda function to read from source S3 Bucket, and write on destination S3 Bucket based on the template `policy.json`.
+Uses `S3-Lambda-Trigger` module to create the Lambda function triggered by an S3 event attaching the custom policy with IAM permissions.
 
 ## Python
 
@@ -61,7 +93,7 @@ The code was split by context to make it easier to read and maintain.
 
 ### json_logger
 
-Sets the configuration for the logger using `python-json-logger` to create a single line JSON log to make easier to read and integrate with any aggregator. Its level is set by an environment variable `log_level`, if not set it will consider `DEBUG` by default. It uses the environment variable `request_id` stored by `main.lambda_handler` to provide Amazon Request ID from Lambda `context`.
+Sets the configuration for the logger using `python-json-logger` to create a single line JSON log to make easier reading and integrating with any aggregator. Its level is set by an environment variable `log_level`, if not set it will consider `DEBUG` by default. It uses the environment variable `request_id` stored by `main.lambda_handler` to provide Amazon Request ID from Lambda `context`.
 
 Log example:
 ```bash
