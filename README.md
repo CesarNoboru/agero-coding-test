@@ -92,6 +92,13 @@ Uses `S3-Lambda-Trigger` module to create the Lambda function triggered by an S3
 
 The code was split by context to make it easier to read and maintain.
 
+#### Dependencies
+
+This libs are only needed to run pytest since they're automatically instaled and packed when deploying Terraform.
+
+- pandas
+- python-json-logger
+
 ### json_logger
 
 Sets the configuration for the logger using `python-json-logger` to create a single line JSON log to make easier reading and integrating with any aggregator. Its level is set by an environment variable `log_level`, if not set it will consider `DEBUG` by default. It uses the environment variable `request_id` stored by `main.lambda_handler` to provide Amazon Request ID from Lambda `context`.
